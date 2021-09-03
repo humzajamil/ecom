@@ -1,8 +1,10 @@
-import {REGISTER_USER} from '../actionTypes';
+import {REGISTER_USER, AUTH} from '../actionTypes';
 
 const reducer = (initialState = [], action) => {
   switch (action.type) {
     case REGISTER_USER:
+      return action.payload;
+    case AUTH:
       return action.payload;
     default:
       return initialState;
