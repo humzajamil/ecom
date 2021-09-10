@@ -5,7 +5,7 @@ const reducer = (initialState = [], action) => {
     case REGISTER_USER:
       return action.payload;
     case AUTH:
-      return {token: action.payload};
+      return {...initialState, ...action.payload};
     default:
       return initialState;
   }

@@ -45,12 +45,15 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [dob, setDob] = useState('');
   const [selectedCountry, setSelectedCountry] = useState(0);
-  const [selectedState, setSelectedState] = useState(0);
+  const [selectedState, setSelectedState] = useState('');
   const [selectedCity, setSelectedCity] = useState(0);
   const [code, setCode] = useState('92');
   const [num, setNum] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [coordinates, setCoordinates] = useState({});
+
+  const [country, setCountry] = useState('');
+  const [state, setState] = useState('');
 
   const dispatch = useDispatch();
 
@@ -61,8 +64,8 @@ const Register = () => {
       email,
       password,
       dob,
-      country: selectedCountry,
-      state: selectedState,
+      country,
+      state,
       city: selectedCity,
       mobile: `+${code}${num}`,
       zipCode: postalCode,
@@ -157,7 +160,6 @@ const Register = () => {
           },
         },
       );
-      console.log(data);
       setCode(data.phonecode);
     }
   };
@@ -165,10 +167,12 @@ const Register = () => {
   useEffect(() => {
     getStates();
     getCode();
+    console.log(selectedCountry, 'from use effect');
   }, [iso2, selectedCountry]);
 
   useEffect(() => {
     getCities();
+    console.log(stateiso2, 'useEffect state iso2');
   }, [stateiso2]);
 
   useEffect(() => {}, [address]);
@@ -262,14 +266,15 @@ const Register = () => {
               selectedValue={selectedCountry}
               onValueChange={(itemValue, itemIndex) => {
                 setSelectedCountry(itemValue);
-                setIso2(itemValue);
+                itemValue ? setCountry(itemValue.name) : null;
+                itemValue ? setIso2(itemValue.iso2) : null;
               }}>
               <Picker.Item label="--Select Country--" value={null} />
               {countries.map(country => (
                 <Picker.Item
                   key={country.id}
                   label={country.name}
-                  value={country.iso2}
+                  value={country}
                 />
               ))}
             </Picker>
@@ -277,15 +282,13 @@ const Register = () => {
               selectedValue={selectedState}
               onValueChange={(itemValue, itemIndex) => {
                 setSelectedState(itemValue);
-                setStateIso2(itemValue);
+                console.log(itemValue);
+                itemValue ? setState(itemValue.name) : null;
+                itemValue ? setStateIso2(itemValue.iso2) : null;
               }}>
               <Picker.Item label="--Select State--" value={null} />
               {states?.map(state => (
-                <Picker.Item
-                  key={state.id}
-                  label={state.name}
-                  value={state.iso2}
-                />
+                <Picker.Item key={state.id} label={state.name} value={state} />
               ))}
             </Picker>
             <Picker
