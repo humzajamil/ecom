@@ -15,8 +15,6 @@ import {TextInputMask} from 'react-native-masked-text';
 import MapView, {Marker} from 'react-native-maps';
 import GetLocation from 'react-native-get-location';
 import Geocoder from 'react-native-geocoding';
-import {useDispatch, useSelector} from 'react-redux';
-import {registerUser} from '../store/actions/register';
 import postalCodes from 'postal-codes-js';
 
 let url = 'https://api.countrystatecity.in/v1/countries';
@@ -25,7 +23,7 @@ Geocoder.init('AIzaSyD83MK2lCE6lXbNeDhDwqdhzUbgmnfKHlE');
 let nameReg = new RegExp('^[a-zA-Z]+$');
 let emailReg = new RegExp('^[^s@]+@[^s@]+.[^s@]+$');
 
-const Register = () => {
+const Register = ({navigation}) => {
   const [countries, setCountries] = useState(null);
   const [states, setStates] = useState(null);
   const [cities, setCities] = useState(null);
@@ -55,15 +53,15 @@ const Register = () => {
   const [country, setCountry] = useState('');
   const [state, setState] = useState('');
 
-  const dispatch = useDispatch();
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let data = {
       firstName,
       lastName,
       email,
       password,
-      dob,
+      dob: `${(dob.getMonth() + 1).toString()}/${dob.getDate().toString()}/${dob
+        .getFullYear()
+        .toString()}`,
       country,
       state,
       city: selectedCity,
@@ -71,7 +69,15 @@ const Register = () => {
       zipCode: postalCode,
       coordinates: [coordinates.latitude, coordinates.longitude],
     };
-    dispatch(registerUser(data));
+    let {data: res} = await axios.post(
+      'http://192.168.18.94:5000/verify-email',
+      {
+        email,
+      },
+    );
+    console.log(res.otp, 'fffffffffffffff');
+    // console.log(res.data.Otp, 'From register component');
+    navigation.navigate('Verify Email', {data: data, otp: res.otp});
   };
 
   const onChange = (event, selectedDate) => {
@@ -401,7 +407,7 @@ const Register = () => {
               <Button
                 disabled={!isMatched}
                 onPress={handleSubmit}
-                title="Sign Up"
+                title="Verify Email"
                 type="solid"
                 buttonStyle={{
                   alignSelf: 'center',

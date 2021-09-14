@@ -8,6 +8,7 @@ import Home from '../components/Home';
 import ItemView from '../components/ItemView';
 import Profile from '../components/Profile';
 import {Button, Icon} from 'react-native-elements';
+import VerifyEmail from '../components/VerifyEmail';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,6 +69,7 @@ const Screens = () => (
       }}>
       <Stack.Screen name="Signin" component={Login} />
       <Stack.Screen name="Signup" component={Register} />
+      <Stack.Screen name="Verify Email" component={VerifyEmail} />
       <Stack.Screen
         name="Home"
         component={MyTabs}
