@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -16,6 +16,7 @@ import MapView, {Marker} from 'react-native-maps';
 import GetLocation from 'react-native-get-location';
 import Geocoder from 'react-native-geocoding';
 import postalCodes from 'postal-codes-js';
+import Captcha from './Captcha';
 
 let url = 'https://api.countrystatecity.in/v1/countries';
 let key = 'VDBZWTcwdTBwQThMSU1QMjFYanZMZE94OTZ2R0lJaHJxMEh1eFhqOA==';
@@ -35,6 +36,8 @@ const Register = ({navigation}) => {
   const [noteColor, setNotecolor] = useState('');
   const [isMatched, setIsMatched] = useState('');
   const [sabSet, setSabSet] = useState(true);
+  const [captchaOk, setCaptchaOk] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
 
   //form states
   const [firstName, setFirstName] = useState(null);
@@ -49,11 +52,17 @@ const Register = ({navigation}) => {
   const [num, setNum] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [coordinates, setCoordinates] = useState({});
-
   const [country, setCountry] = useState('');
   const [state, setState] = useState('');
 
+  const refInp1 = useRef();
+  const refInp2 = useRef();
+  const refInp3 = useRef();
+  const refInp4 = useRef();
+  const refInp5 = useRef();
+
   const handleSubmit = async () => {
+    setShowLoader(true);
     let data = {
       firstName,
       lastName,
@@ -69,15 +78,12 @@ const Register = ({navigation}) => {
       zipCode: postalCode,
       coordinates: [coordinates.latitude, coordinates.longitude],
     };
-    let {data: res} = await axios.post(
-      'http://192.168.18.94:5000/verify-email',
-      {
-        email,
-      },
-    );
-    console.log(res.otp, 'fffffffffffffff');
+    await axios.post('http://192.168.18.94:5000/generate-otp', {
+      email,
+    });
+    setShowLoader(false);
     // console.log(res.data.Otp, 'From register component');
-    navigation.navigate('Verify Email', {data: data, otp: res.otp});
+    navigation.navigate('Verify Email', {data: data});
   };
 
   const onChange = (event, selectedDate) => {
@@ -103,7 +109,7 @@ const Register = ({navigation}) => {
   const getLocation = coords => {
     GetLocation.getCurrentPosition({
       enableHighAccuracy: true,
-      timeout: 50000,
+      timeout: 500000,
     })
       .then(location => {
         Geocoder.from({
@@ -114,7 +120,7 @@ const Register = ({navigation}) => {
             let {formatted_address} = json.results[0];
             setAddress(formatted_address);
           })
-          .catch(error => console.warn(error));
+          .catch(error => console.log(error));
         setCoordinates({
           latitude: coords ? coords.latitude : location.latitude,
           longitude: coords ? coords.longitude : location.longitude,
@@ -195,6 +201,11 @@ const Register = ({navigation}) => {
     }
   }, [password]);
 
+  const handleIsMatched = val => {
+    console.log(val);
+    setCaptchaOk(val);
+  };
+
   return (
     <ScrollView style={{flex: 1}}>
       {!countries && coordinates ? (
@@ -208,6 +219,12 @@ const Register = ({navigation}) => {
           </Text>
           <View>
             <Input
+              ref={refInp1}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                refInp2.current.focus();
+              }}
+              blurOnSubmit={false}
               placeholder="First Name"
               keyboardType="default"
               onChangeText={text => {
@@ -220,6 +237,12 @@ const Register = ({navigation}) => {
               </Text>
             ) : null}
             <Input
+              ref={refInp2}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                refInp3.current.focus();
+              }}
+              blurOnSubmit={false}
               placeholder="Last Name"
               keyboardType="default"
               onChangeText={text => {
@@ -232,6 +255,13 @@ const Register = ({navigation}) => {
               </Text>
             ) : null}
             <Input
+              ref={refInp3}
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                refInp4.current.focus();
+                setShow(true);
+              }}
+              blurOnSubmit={false}
               placeholder="email"
               keyboardType="email-address"
               onChangeText={text => {
@@ -248,6 +278,12 @@ const Register = ({navigation}) => {
                 setShow(true);
               }}>
               <Input
+                ref={refInp4}
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  refInp5.current.focus();
+                }}
+                blurOnSubmit={false}
                 placeholder="DOB"
                 keyboardType="default"
                 disabled
@@ -319,6 +355,11 @@ const Register = ({navigation}) => {
               }}>
               <Text style={{fontSize: 18}}>{code}</Text>
               <TextInputMask
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  refInp5.current.focus();
+                }}
+                blurOnSubmit={false}
                 type={'custom'}
                 style={{marginLeft: 5, color: 'black', fontSize: 18}}
                 placeholder="(336)-513-0514"
@@ -333,6 +374,7 @@ const Register = ({navigation}) => {
               />
             </View>
             <Input
+              ref={refInp5}
               placeholder="Postal Code"
               keyboardType="number-pad"
               onChangeText={text => {
@@ -352,7 +394,7 @@ const Register = ({navigation}) => {
               placeholder="location select from map"
             />
             <MapView
-              style={{height: 500, width: '95%', alignSelf: 'center'}}
+              style={{height: 400, width: '90%', alignSelf: 'center'}}
               // onRegionChange={getLocation}
               initialRegion={{
                 latitude:
@@ -375,7 +417,7 @@ const Register = ({navigation}) => {
               />
             </MapView>
             <Input
-              style={{fontSize: 12, flexWrap: 'wrap'}}
+              style={{flexWrap: 'wrap', paddingTop: 50}}
               placeholder="password"
               keyboardType="default"
               onChangeText={text => {
@@ -391,7 +433,7 @@ const Register = ({navigation}) => {
 
             <Input
               disabled={password.length > 0 ? false : true}
-              style={{fontSize: 12, flexWrap: 'wrap'}}
+              style={{flexWrap: 'wrap'}}
               placeholder="confirm password"
               keyboardType="default"
               onChangeText={text => {
@@ -403,9 +445,20 @@ const Register = ({navigation}) => {
                 Password Matched
               </Text>
             ) : null}
+            <Captcha handleIsMatched={handleIsMatched.bind(this)} />
+
             <View style={{marginTop: 20, marginBottom: 20}}>
               <Button
-                disabled={!isMatched}
+                icon={
+                  showLoader ? (
+                    <ActivityIndicator
+                      size={20}
+                      color="white"
+                      style={{paddingRight: 5}}
+                    />
+                  ) : null
+                }
+                disabled={!(isMatched && captchaOk)}
                 onPress={handleSubmit}
                 title="Verify Email"
                 type="solid"

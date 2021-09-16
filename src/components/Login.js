@@ -6,12 +6,13 @@ import {
   ActivityIndicator,
   Modal,
 } from 'react-native';
-import {Button, Input} from 'react-native-elements';
+import {Button, Input, Icon, Text, Image} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
 import {loginUser} from '../store/actions/auth';
-import {Icon, Text} from 'react-native-elements';
+import {width, height} from '../constants/Dimensions';
+import {LoginImage} from '../images';
 
-const Login = ({navigation}) => {
+const Login = ({navigation, route}) => {
   let view;
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
@@ -75,8 +76,21 @@ const Login = ({navigation}) => {
       <SafeAreaView
         style={{
           flex: 1,
-          justifyContent: 'center',
+          marginTop: height * 0.2,
         }}>
+        <View
+          style={{
+            alignSelf: 'center',
+          }}>
+          <Image
+            source={LoginImage}
+            style={{
+              width: 100,
+              height: 100,
+            }}
+          />
+        </View>
+
         <Input
           value={email}
           placeholder="email"
@@ -90,21 +104,40 @@ const Login = ({navigation}) => {
           keyboardType="default"
           onChangeText={text => setpassword(text)}
         />
-        <View
+        <Text
           style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
+            textAlign: 'right',
+            marginRight: 20,
+            marginTop: -20,
+            color: 'red',
           }}>
-          <Button
-            title="Sign Up"
-            type="outline"
-            onPress={() => navigation.navigate('Signup')}
-          />
+          Forgot Password?
+        </Text>
+        <View style={{marginTop: height * 0.05}}>
           <Button
             disabled={email.length == 0 || password == 0 ? true : false}
+            containerStyle={{
+              alignSelf: 'center',
+              width: '80%',
+              borderRadius: 30,
+            }}
+            titleStyle={{textAlign: 'center'}}
+            buttonStyle={{backgroundColor: 'green'}}
             title="Sign In"
             type="solid"
             onPress={handleSubmit}
+          />
+          <Button
+            containerStyle={{
+              alignSelf: 'center',
+              width: '80%',
+              borderRadius: 30,
+            }}
+            titleStyle={{textAlign: 'center', color: 'green'}}
+            buttonStyle={{borderWidth: 0}}
+            title="Sign Up"
+            type="outline"
+            onPress={() => navigation.navigate('Signup')}
           />
         </View>
       </SafeAreaView>

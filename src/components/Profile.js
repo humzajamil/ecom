@@ -18,7 +18,12 @@ const Profile = () => {
       <Input value={user.state} disabled />
       <Input value={user.country} disabled />
       <MapView
-        style={{height: 500, width: '95%', alignSelf: 'center'}}
+        style={{
+          height: 400,
+          width: '90%',
+          alignSelf: 'center',
+          marginBottom: 30,
+        }}
         // onRegionChange={getLocation}
         initialRegion={{
           latitude: Number(user.coordinates[0]),

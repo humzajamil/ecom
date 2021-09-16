@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   ScrollView,
+  ActivityIndicator,
   KeyboardAvoidingView,
 } from 'react-native';
 import {Button, Image, Input, Text} from 'react-native-elements';
@@ -12,6 +13,7 @@ import {Email} from '../images';
 import {useDispatch, useSelector} from 'react-redux';
 import {registerUser} from '../store/actions/register';
 import SuccessfulModal from './SuccessfulModal';
+import axios from 'axios';
 
 const VerifyEmail = ({navigation, route}) => {
   const inp1 = useRef();
@@ -23,17 +25,41 @@ const VerifyEmail = ({navigation, route}) => {
   const [input3, setInput3] = useState(null);
   const [input4, setInput4] = useState(null);
   const [show, setShow] = useState(false);
+  const [wrong, setWrong] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+
+  // const [otp, setOtp] = useState(route.params.otp);
 
   const dispatch = useDispatch();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setShowLoader(true);
     let code = input1 + input2 + input3 + input4;
-    console.log(code);
-    if (code == route.params.otp) {
+    let match = await axios.post('http://192.168.18.94:5000/verify-email', {
+      email: route.params.data.email,
+      otp: code,
+    });
+    if (match.status == 200) {
+      setShowLoader(false);
       dispatch(registerUser(route.params.data));
+      setShowLoader(false);
+
       setShow(true);
     } else {
+      setWrong(true);
       console.log('mismatched');
+    }
+  };
+
+  const handleResend = async () => {
+    try {
+      await axios.post('http://192.168.18.94:5000/generate-otp', {
+        email: route.params.data.email,
+      });
+      alert('Verification code sent');
+    } catch (error) {
+      console.log(error);
+      alert(error);
     }
   };
 
@@ -185,11 +211,26 @@ const VerifyEmail = ({navigation, route}) => {
             />
           </View>
         </View>
+        {wrong ? (
+          <Text style={{color: 'red', textAlign: 'center'}}>
+            Wrong pin, please try again
+          </Text>
+        ) : null}
         <View
           style={{
             marginTop: 200,
           }}>
           <Button
+            icon={
+              showLoader ? (
+                <ActivityIndicator
+                  size={20}
+                  color="white"
+                  style={{paddingRight: 5}}
+                />
+              ) : null
+            }
+            disabled={input1 && input2 && input3 && input4 ? false : true}
             onPress={handleSubmit}
             title="VERIFY"
             type="solid"
@@ -202,6 +243,7 @@ const VerifyEmail = ({navigation, route}) => {
             }}
           />
           <Button
+            onPress={handleResend}
             buttonStyle={{borderColor: 'white'}}
             title="Resend Code"
             type="outline"
