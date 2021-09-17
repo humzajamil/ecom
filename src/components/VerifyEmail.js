@@ -13,6 +13,7 @@ import {Email} from '../images';
 import {useDispatch, useSelector} from 'react-redux';
 import {registerUser} from '../store/actions/register';
 import SuccessfulModal from './SuccessfulModal';
+import CountDown from 'react-native-countdown-component';
 import axios from 'axios';
 
 const VerifyEmail = ({navigation, route}) => {
@@ -64,7 +65,7 @@ const VerifyEmail = ({navigation, route}) => {
   };
 
   return (
-    <ScrollView style={{flex: 1}}>
+    <ScrollView style={{flex: 1, backgroundColor: 'white'}}>
       {show ? <SuccessfulModal navigation={navigation} /> : null}
       <KeyboardAvoidingView
         keyboardVerticalOffset={-100}
@@ -210,6 +211,21 @@ const VerifyEmail = ({navigation, route}) => {
               }}
             />
           </View>
+          <CountDown
+            showSeparator
+            style={{marginLeft: 10, alignSelf: 'center'}}
+            until={120}
+            size={15}
+            onFinish={() => alert('Otp expired')}
+            digitStyle={{backgroundColor: 'white'}}
+            digitTxtStyle={{
+              color: 'red',
+              fontWeight: 'normal',
+            }}
+            separatorStyle={{color: 'red', fontWeight: 'normal'}}
+            timeToShow={['M', 'S']}
+            timeLabels={{m: '', s: ''}}
+          />
         </View>
         {wrong ? (
           <Text style={{color: 'red', textAlign: 'center'}}>
