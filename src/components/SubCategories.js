@@ -55,8 +55,11 @@ const SubCategories = ({navigation, route}) => {
   );
 
   return (
-    <View style={{flex: 1, marginTop: height * 0.1}}>
+    <View style={{flex: 1, marginTop: height * 0.02}}>
       <FlatList
+        contentContainerStyle={{
+          justifyContent: 'center',
+        }}
         data={subCategoriesFromState}
         renderItem={renderItem}
         keyExtractor={item => item._id}

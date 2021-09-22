@@ -56,7 +56,7 @@ const Shop = ({navigation}) => {
   );
 
   return (
-    <View style={{flex: 1, marginTop: height * 0.1}}>
+    <View style={{flex: 1, marginTop: height * 0.02}}>
       <Text h5 style={{marginLeft: width * 0.03, fontWeight: 'bold'}}>
         Categories
       </Text>
