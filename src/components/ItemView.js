@@ -11,9 +11,53 @@ const ItemView = ({navigation, route}) => {
   }, []);
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={{uri: route.params.item.image}} />
-      <View style={styles.textMain}>
+      <Image
+        resizeMode="stretch"
+        style={styles.image}
+        source={{uri: route.params.item.images[0]}}
+      />
+      <View style={{flexDirection: 'row', alignItems: 'center', padding: 10}}>
+        <Text style={{fontSize: 18, color: 'darkorange', fontWeight: 'bold'}}>
+          Rs.
+        </Text>
+        <Text style={styles.price}>{route.params.item.price}</Text>
+      </View>
+
+      <View
+        style={{
+          backgroundColor: 'white',
+          width: width * 0.95,
+          alignSelf: 'center',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          flexDirection: 'row',
+          marginBottom: height * 0.03,
+        }}>
+        <Text style={{fontSize: 16, color: 'lightgrey', width: '40%'}}>
+          Product
+        </Text>
         <Text style={styles.title}>{route.params.item.name}</Text>
+      </View>
+
+      <View
+        style={{
+          backgroundColor: 'white',
+          width: width * 0.95,
+          alignSelf: 'center',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          flexDirection: 'row',
+        }}>
+        <Text
+          style={{
+            fontSize: 16,
+            color: 'lightgrey',
+            width: '40%',
+            alignSelf: 'flex-start',
+          }}>
+          Description
+        </Text>
+        <Text style={styles.title}>{route.params.item.description}</Text>
       </View>
     </View>
   );
@@ -27,15 +71,17 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width * 1,
-    height: height * 0.5,
-    marginBottom: 20,
+    height: height * 0.4,
   },
   textMain: {
     paddingLeft: 15,
   },
   title: {
-    color: 'grey',
-    marginBottom: 5,
+    padding: 5,
+    fontSize: 16,
+    justifyContent: 'center',
+    textAlign: 'justify',
+    width: '60%',
   },
   sizes: {
     flexDirection: 'row',
@@ -50,5 +96,11 @@ const styles = StyleSheet.create({
   bold: {
     fontWeight: 'bold',
     alignSelf: 'center',
+  },
+  price: {
+    color: 'darkorange',
+    fontSize: 25,
+    fontWeight: 'bold',
+    paddingLeft: 5,
   },
 });

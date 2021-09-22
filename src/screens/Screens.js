@@ -9,6 +9,10 @@ import ItemView from '../components/ItemView';
 import Profile from '../components/Profile';
 import {Button, Icon} from 'react-native-elements';
 import VerifyEmail from '../components/VerifyEmail';
+import Shop from '../components/Shop';
+import SubCategories from '../components/SubCategories';
+import ItemsCard from '../components/ItemsCard';
+import Items from '../components/Items';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -27,7 +31,7 @@ function MyTabs() {
       }}>
       <Tab.Screen
         name="Shop"
-        component={Home}
+        component={Shop}
         options={{
           // headerRight: () => (
           //   <Icon
@@ -75,6 +79,8 @@ const Screens = () => (
         component={MyTabs}
         options={{headerShown: false}}
       />
+      <Stack.Screen name="SubCategories" component={SubCategories} />
+      <Stack.Screen name="Items" component={Items} />
       <Stack.Screen name="ItemView" component={ItemView} />
     </Stack.Navigator>
   </NavigationContainer>

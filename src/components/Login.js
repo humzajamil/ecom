@@ -51,7 +51,6 @@ const Login = ({navigation, route}) => {
             <View
               style={{
                 flexDirection: 'row',
-                backgroundColor: 'red',
                 backgroundColor: 'white',
                 borderRadius: 6,
                 padding: 35,

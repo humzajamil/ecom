@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
-import CollectionCard from './CollectionCard';
+import CollectionCard from './ItemsCard';
 import {CheckBox} from 'react-native-elements';
 
 const Home = ({navigation}) => {
