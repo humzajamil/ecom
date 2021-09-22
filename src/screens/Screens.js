@@ -13,9 +13,11 @@ import Shop from '../components/Shop';
 import SubCategories from '../components/SubCategories';
 import ItemsCard from '../components/ItemsCard';
 import Items from '../components/Items';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
 function MyTabs() {
   return (
@@ -33,13 +35,15 @@ function MyTabs() {
         name="Shop"
         component={Shop}
         options={{
-          // headerRight: () => (
-          //   <Icon
-          //     onPress={() => {}}
-          //     title="Info"
-          //     color="#fff"
-          //   />
-          // ),
+          headerLeft: () => (
+            <Button
+              type="clear"
+              onPress={() => alert('This is a button!')}
+              icon={
+                <Icon name="navicon" type="evilicon" color="#fff" size={35} />
+              }
+            />
+          ),
           tabBarLabel: 'Shop',
           tabBarOptions: {activeTintColor: 'white'},
           tabBarIcon: ({color, size}) => (
