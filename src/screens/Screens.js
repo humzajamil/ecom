@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DrawerActions} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Register from '../components/Register';
@@ -19,7 +19,16 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-function MyTabs() {
+function Root() {
+  return (
+    <Drawer.Navigator screenOptions={{headerShown: false}}>
+      <Drawer.Screen name="Home" component={MyTabs} />
+      <Drawer.Screen name="Profile" component={Profile} />
+    </Drawer.Navigator>
+  );
+}
+
+function MyTabs({navigation}) {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -38,7 +47,9 @@ function MyTabs() {
           headerLeft: () => (
             <Button
               type="clear"
-              onPress={() => alert('This is a button!')}
+              onPress={() => {
+                navigation.openDrawer('Root');
+              }}
               icon={
                 <Icon name="navicon" type="evilicon" color="#fff" size={35} />
               }
@@ -80,7 +91,7 @@ const Screens = () => (
       <Stack.Screen name="Verify Email" component={VerifyEmail} />
       <Stack.Screen
         name="Home"
-        component={MyTabs}
+        component={Root}
         options={{headerShown: false}}
       />
       <Stack.Screen name="SubCategories" component={SubCategories} />
