@@ -21,14 +21,14 @@ const Shop = ({navigation}) => {
   const [showLoader, setShowLoader] = useState(false);
   // const [rippleColor, setRippleColor] = useState('blue');
   // const [rippleOverflow, setRippleOverflow] = useState(false);
+  useEffect(() => {
+    getCategoriesFunc();
+  }, []);
   const dispatch = useDispatch();
 
   const getCategoriesFunc = () => {
     dispatch(getCategories());
   };
-  useEffect(() => {
-    getCategoriesFunc();
-  }, []);
 
   const categoriesFromState = useSelector(state => state.categories);
 
